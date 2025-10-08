@@ -32,14 +32,25 @@
 
   <script>
     const video = document.getElementById('fullscreenVideo');
-    const redirectUrl = 't.me/osinec_me'; // ← замените на нужную ссылку
+    const redirectUrl = 'https://t.me/osinec_me'; // Полный URL
 
-    // Попытка запустить видео (может не сработать без взаимодействия)
-    video.play().catch(e => {
-      console.warn('Автовоспроизведение заблокировано:', e);
+    // Попытка автовоспроизведения (без звука благодаря muted)
+    const playVideo = () => {
+      video.play()
+        .then(() => console.log('Видео запущено без звука'))
+        .catch(e => console.warn('Автовоспроизведение заблокировано:', e));
+    };
+
+    // Запуск сразу
+    playVideo();
+
+    // Дополнительная попытка при первом взаимодействии (на случай строгих браузеров)
+    const events = ['click', 'touchstart', 'keydown'];
+    events.forEach(event => {
+      document.addEventListener(event, playVideo, { once: true, passive: true });
     });
 
-    // При окончании видео — переход
+    // Переход после окончания
     video.addEventListener('ended', () => {
       window.location.href = redirectUrl;
     });
