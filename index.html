@@ -3,56 +3,62 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Автовоспроизведение видео</title>
+  <title>Видео</title>
   <style>
     body, html {
       margin: 0;
       padding: 0;
       width: 100%;
       height: 100%;
-      overflow: hidden;
       background: black;
+      overflow: hidden;
     }
     video {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      top: 50%;
+      left: 50%;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      transform: translate(-50%, -50%);
       z-index: -1;
     }
   </style>
 </head>
 <body>
-  <video id="fullscreenVideo" autoplay muted playsinline>
-    <source src="Gen-4.mp4" type="video/mp4">
+  <video id="fullscreenVideo" autoplay muted playsinline preload="auto">
+    <source src="Gen-4-web.mp4" type="video/mp4">
     Ваш браузер не поддерживает воспроизведение видео.
   </video>
 
   <script>
     const video = document.getElementById('fullscreenVideo');
-    const redirectUrl = 'https://t.me/osinec_me'; // Полный URL
+    const redirectUrl = 'https://t.me/osinec_me';
 
-    // Попытка автовоспроизведения (без звука благодаря muted)
     const playVideo = () => {
       video.play()
-        .then(() => console.log('Видео запущено без звука'))
-        .catch(e => console.warn('Автовоспроизведение заблокировано:', e));
+        .then(() => console.log('✅ Видео запущено'))
+        .catch(err => console.warn('🔇 Автовоспроизведение заблокировано:', err));
     };
 
-    // Запуск сразу
+    // Попытка запуска сразу
     playVideo();
 
-    // Дополнительная попытка при первом взаимодействии (на случай строгих браузеров)
-    const events = ['click', 'touchstart', 'keydown'];
-    events.forEach(event => {
-      document.addEventListener(event, playVideo, { once: true, passive: true });
+    // Дополнительная попытка при первом взаимодействии (на всякий случай)
+    ['click', 'touchstart', 'keydown'].forEach(type => {
+      document.addEventListener(type, playVideo, { once: true, passive: true });
     });
 
     // Переход после окончания
     video.addEventListener('ended', () => {
+      console.log('🎬 Переход...');
       window.location.href = redirectUrl;
+    });
+
+    // Лог ошибок загрузки
+    video.addEventListener('error', () => {
+      console.error('❗ Не удалось загрузить видео');
     });
   </script>
 </body>
