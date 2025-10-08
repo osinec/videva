@@ -1,65 +1,46 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Видео</title>
-  <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      background: black;
-      overflow: hidden;
-    }
-    video {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      min-width: 100%;
-      min-height: 100%;
-      width: auto;
-      height: auto;
-      transform: translate(-50%, -50%);
-      z-index: -1;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Автовоспроизведение видео</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        video {
+            max-width: 100%;
+            max-height: 100vh;
+            outline: none;
+        }
+    </style>
 </head>
 <body>
-  <video id="fullscreenVideo" autoplay muted playsinline preload="auto">
-    <source src="Gen-4-web.mp4" type="video/mp4">
-    Ваш браузер не поддерживает воспроизведение видео.
-  </video>
+    <video id="autoplayVideo" controls autoplay muted playsinline>
+        <!-- Замените путь на ваше видео -->
+        <source src="ваше-видео.mp4" type="video/mp4">
+        Ваш браузер не поддерживает воспроизведение видео.
+    </video>
 
-  <script>
-    const video = document.getElementById('fullscreenVideo');
-    const redirectUrl = 'https://t.me/osinec_me';
+    <script>
+        const video = document.getElementById('autoplayVideo');
+        const redirectUrl = 'https://example.com'; // Укажите сюда нужную ссылку
 
-    const playVideo = () => {
-      video.play()
-        .then(() => console.log('✅ Видео запущено'))
-        .catch(err => console.warn('🔇 Автовоспроизведение заблокировано:', err));
-    };
+        // Обработчик окончания видео
+        video.addEventListener('ended', function() {
+            window.location.href = redirectUrl;
+        });
 
-    // Попытка запуска сразу
-    playVideo();
-
-    // Дополнительная попытка при первом взаимодействии (на всякий случай)
-    ['click', 'touchstart', 'keydown'].forEach(type => {
-      document.addEventListener(type, playVideo, { once: true, passive: true });
-    });
-
-    // Переход после окончания
-    video.addEventListener('ended', () => {
-      console.log('🎬 Переход...');
-      window.location.href = redirectUrl;
-    });
-
-    // Лог ошибок загрузки
-    video.addEventListener('error', () => {
-      console.error('❗ Не удалось загрузить видео');
-    });
-  </script>
+        // Попытка снять блокировку автовоспроизведения (если видео без звука)
+        video.play().catch(e => {
+            console.warn("Автовоспроизведение заблокировано браузером:", e);
+        });
+    </script>
 </body>
 </html>
