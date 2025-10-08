@@ -23,21 +23,18 @@
 </head>
 <body>
     <video id="autoplayVideo" controls autoplay muted playsinline>
-        <!-- Замените путь на ваше видео -->
         <source src="timer.mp4" type="video/mp4">
         Ваш браузер не поддерживает воспроизведение видео.
     </video>
 
     <script>
         const video = document.getElementById('autoplayVideo');
-        const redirectUrl = 'https://t.me/osinec_me'; // Укажите сюда нужную ссылку
+        const redirectUrl = 'https://t.me/osinec_me'; // ← без пробелов!
 
-        // Обработчик окончания видео
         video.addEventListener('ended', function() {
             window.location.href = redirectUrl;
         });
 
-        // Попытка снять блокировку автовоспроизведения (если видео без звука)
         video.play().catch(e => {
             console.warn("Автовоспроизведение заблокировано браузером:", e);
         });
